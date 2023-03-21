@@ -9,6 +9,7 @@ import ConfirmationPage from "./ConfirmationPage";
 import { useStateValue } from "./StateProvider";
 import PrivateRoute from "./PrivateRoute";
 import { auth } from "./firebase";
+import LogoutPage from "./LogoutPage";
 
 function App() {
   const [{}, dispatch] = useStateValue();
@@ -46,6 +47,7 @@ function App() {
         <Route path="/confirmation" element={<ConfirmationPage />} />
       </Route>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
 
 
       </Routes>
