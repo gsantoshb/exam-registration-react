@@ -1,68 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
+import { auth, googleProvider } from "./firebase";
+import { useStateValue } from "./StateProvider";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [{ user }, dispatch] = useStateValue();
+
+  useEffect(() => {
+    // will only run once when the app component loads...
+    if(user){
+      navigate('/dashboard');
+    }
+  
+  }, [user]);
 
   const signIn = (e) => {
     e.preventDefault();
 
     auth
-      .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        navigate.push("/");
-      })
-      .catch((error) => alert(error.message));
-  };
-
-  const register = (e) => {
-    e.preventDefault();
-
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        // it successfully created a new user with email and password
-        if (auth) {
-          navigate.push("/");
-        }
-      })
-      .catch((error) => alert(error.message));
+    .signInWithPopup(googleProvider)
+    .then((auth) => {
+      navigate("/dashboard");
+    })
+    .catch((error) => alert(error.message));
+    
   };
 
   return (
     <main className="form-signin w-100 m-auto">
       <form>
         <h1 className="h3 mb-3 fw-normal">Please sign in with Google</h1>
-
-        {/* <div className="form-floating">
-          <input
-            type="email"
-            className="form-control"
-            id="floatingInput"
-            placeholder="name@example.com"
-          />
-          <label htmlFor="floatingInput">Email address</label>
-        </div>
-        <div className="form-floating">
-          <input
-            type="password"
-            className="form-control"
-            id="floatingPassword"
-            placeholder="Password"
-          />
-          <label htmlFor="floatingPassword">Password</label>
-        </div>
-
-        <div className="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me" /> Remember me
-          </label>
-        </div> */}
-        <button className="w-100 btn btn-lg btn-primary" type="submit">
+        <button className="w-100 btn btn-lg btn-primary" type="submit" onClick={signIn}>
           Sign in with Google
         </button>
         <p className="mt-5 mb-3 text-muted">&copy; 2023</p>

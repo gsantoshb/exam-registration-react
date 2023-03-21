@@ -6,7 +6,9 @@ export const initialState = {
 
 const reducer = (state, action) => {
   console.log(action);
-  // switch (action.type) {
+
+  
+  switch (action.type) {
   //   case "ADD_TO_BASKET":
   //     return {
   //       ...state,
@@ -39,15 +41,15 @@ const reducer = (state, action) => {
   //       basket: newBasket
   //     }
     
-  //   case "SET_USER":
-  //     return {
-  //       ...state,
-  //       user: action.user
-  //     }
+    case "SET_USER":
+      return {
+        ...state,
+        user: action.user
+      }
 
-  //   default:
-  //     return state;
-  // }
+    default:
+      return state;
+  }
 };
 
 export default reducer;
