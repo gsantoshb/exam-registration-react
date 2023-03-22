@@ -11,6 +11,7 @@ function LoginPage() {
   useEffect(() => {
     // will only run once when the app component loads...
     if(user){
+      console.log('Going to dashboard from login...')
       navigate('/dashboard');
     }
   

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ConfirmationPage.css";
-
+import { useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "./firebase";
+import { useStateValue } from "./StateProvider";
 
 function ConfirmationPage() {
 

@@ -3,14 +3,10 @@ import Spinner from './Spinner'
 import { useStateValue } from './StateProvider';
 import { useAuthStatus } from './useAuthStatus';
 
-const PrivateRoute = () => {
-  const [{user}, dispatch] = useStateValue();
+const PrivateRoute = ({isAuth}) => {
 
-  if(user){
-  return user ? <Outlet /> : <Navigate to='/login' />;
-  }else{
-    return <Spinner />;
+  return isAuth ? <Outlet /> : <Navigate to='/login' />
+  
   }
-}
 
 export default PrivateRoute

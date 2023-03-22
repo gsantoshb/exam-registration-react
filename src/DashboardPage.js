@@ -1,8 +1,27 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import "./DashboardPage.css";
-
+import { useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "./firebase";
+import { useStateValue } from "./StateProvider";
 
 function DashboardPage() {
+  const [{user}, dispatch] = useStateValue();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    console.log("User from context in dashboard page:"+user.uid);
+  },[]);
+
+
+  const gosomewhere = (e) => {
+    e.preventDefault();
+
+      navigate("/application");
+    
+    
+  };
+
+
 
 
     return (
@@ -37,7 +56,7 @@ function DashboardPage() {
             <th scope="row">2</th>
             <td><nav className="nav"><a className="nav-link" href="#">48384348797</a></nav></td>
             <td>TS-NEET</td>
-            <td>Hall Ticket Available    <button type="button" className="btn btn-success">Get HallTicket</button></td>
+            <td>Hall Ticket Available    <button type="button" className="btn btn-success" onClick={gosomewhere}>Get HallTicket</button></td>
           </tr>
           <tr>
             <th scope="row">3</th>
