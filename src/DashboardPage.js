@@ -7,16 +7,21 @@ import { useStateValue } from "./StateProvider";
 function DashboardPage() {
   const [{user}, dispatch] = useStateValue();
   const navigate = useNavigate();
+  const [availableExams, setAvailableExams] = useState([]);
 
   useEffect(()=>{
     console.log("User from context in dashboard page:"+user.uid);
+    setAvailableExams([{id:1, name:"Eamcet", isOpen: true},
+                       {id:2, name:"IIT JEE", isOpen: false},
+                       {id:3, name:"NEET", isOpen: true},
+                      ]);
   },[]);
 
 
   const gosomewhere = (e) => {
     e.preventDefault();
 
-      navigate("/application");
+    navigate("/application");
     
     
   };
@@ -81,7 +86,16 @@ function DashboardPage() {
           </tr>
           </thead>
           <tbody>
-          <tr>
+
+          {availableExams.map(exam => (
+            <tr key={exam.id}>
+              <th scope="row">{exam.id}</th>
+              <td>{exam.name}</td>
+              <td>{exam.isOpen?<button type="button" className="btn btn-success">Go to exam reg</button>:<button disabled type="button" className="btn btn-secondary">Go to exam reg</button>}</td>
+            </tr>
+          ))}
+
+          {/* <tr>
             <th scope="row">1</th>
             <td>TS-EAMCET</td>
             <td>OPEN FOR REGISTRATION <button type="button" className="btn btn-success">Go to exam reg</button></td>
@@ -95,7 +109,7 @@ function DashboardPage() {
             <th scope="row">3</th>
             <td>TS-EAMCET</td>
             <td>CLOSED FOR REGISTRATION <button disabled type="button" className="btn btn-secondary">Go to exam reg</button></td>
-          </tr>
+          </tr> */}
           </tbody>
         </table>
         </main>
