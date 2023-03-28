@@ -1,30 +1,38 @@
 import React, { useState , useEffect} from "react";
 import "./DashboardPage.css";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "./firebase";
+import { db } from "./firebase";
 import { useStateValue } from "./StateProvider";
 
 function DashboardPage() {
   const [{user}, dispatch] = useStateValue();
   const navigate = useNavigate();
   const [availableExams, setAvailableExams] = useState([]);
+  const [myApplications, setMyApplications] = useState([]);
 
   useEffect(()=>{
     console.log("User from context in dashboard page:"+user.uid);
-    setAvailableExams([{id:1, name:"Eamcet", isOpen: true},
-                       {id:2, name:"IIT JEE", isOpen: false},
-                       {id:3, name:"NEET", isOpen: true},
-                      ]);
+    const examsData = [];
+    db.collection("exams").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          examsData.push({id: doc.id, name: doc.data().name, isOpen: doc.data().isOpen});
+      });
+      setAvailableExams(examsData);
+  });
+
+  const myApplicationsData = [];
+  db.collection("myApplications").where("userId", "==", user.uid)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            myApplicationsData.push({id: doc.id, applicationNumber: doc.data().applicationNumber, name: doc.data().name, status: doc.data().status});
+        });
+        setMyApplications(myApplicationsData);
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
   },[]);
-
-
-  const gosomewhere = (e) => {
-    e.preventDefault();
-
-    navigate("/application");
-    
-    
-  };
 
 
 
@@ -51,24 +59,14 @@ function DashboardPage() {
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td><nav className="nav"><a className="nav-link" href="#">128399481</a></nav></td>
-            <td>TS-EAMCET</td>
-            <td>Processing ... </td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td><nav className="nav"><a className="nav-link" href="#">48384348797</a></nav></td>
-            <td>TS-NEET</td>
-            <td>Hall Ticket Available    <button type="button" className="btn btn-success" onClick={gosomewhere}>Get HallTicket</button></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td><nav className="nav"><a className="nav-link" href="#">ABB6478364876</a></nav></td>
-            <td>IIT JEE Prelims</td>
-            <td>Processing ... </td>
-          </tr>
+          {myApplications.map(application => (
+            <tr key={application.id}>
+              <th scope="row">{application.id}</th>
+              <td>{application.applicationNumber}</td>
+              <td>{application.name}</td>
+              <td>{application.status === "Submitted"?<button type="button" className="btn btn-success">Completed - Click to get HT</button>:<button  type="button" className="btn btn-secondary">Continue application</button>}</td>
+            </tr>
+          ))}
           </tbody>
         </table>
       
@@ -95,21 +93,6 @@ function DashboardPage() {
             </tr>
           ))}
 
-          {/* <tr>
-            <th scope="row">1</th>
-            <td>TS-EAMCET</td>
-            <td>OPEN FOR REGISTRATION <button type="button" className="btn btn-success">Go to exam reg</button></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>TS-NEET</td>
-            <td>OPEN FOR REGISTRATION <button type="button" className="btn btn-success">Go to exam reg</button></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>TS-EAMCET</td>
-            <td>CLOSED FOR REGISTRATION <button disabled type="button" className="btn btn-secondary">Go to exam reg</button></td>
-          </tr> */}
           </tbody>
         </table>
         </main>
