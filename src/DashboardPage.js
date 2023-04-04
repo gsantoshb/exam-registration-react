@@ -35,6 +35,10 @@ function DashboardPage() {
   },[]);
 
 
+  const gotoExam = (examId, examName) => {
+    console.log("Exam id on click:"+examId);
+    navigate('/application',{state: {examId: examId, examName: examName}});
+  }
 
 
     return (
@@ -89,7 +93,7 @@ function DashboardPage() {
             <tr key={exam.id}>
               <th scope="row">{exam.id}</th>
               <td>{exam.name}</td>
-              <td>{exam.isOpen?<button type="button" className="btn btn-success">Go to exam reg</button>:<button disabled type="button" className="btn btn-secondary">Go to exam reg</button>}</td>
+              <td>{exam.isOpen?<button type="button" className="btn btn-success"   onClick={() => {gotoExam(exam.id, exam.name)}} >Go to exam reg</button>:<button disabled type="button" className="btn btn-secondary">Go to exam reg</button>}</td>
             </tr>
           ))}
 

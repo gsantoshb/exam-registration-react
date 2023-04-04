@@ -2,18 +2,38 @@ import React, { useState , useEffect} from "react";
 import "./ApplicationPage.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "./firebase";
+import { useNavigate, useLocation } from "react-router-dom";
+import { db, auth, googleProvider } from "./firebase";
 import { useStateValue } from "./StateProvider";
 
 function ApplicationPage() {
 
   const [startDate, setStartDate] = useState(new Date());
   const [{user}, dispatch] = useStateValue();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [applicationData, setApplicationData]= useState({});
 
   useEffect(()=>{
     console.log("User from context in application page:"+user.uid);
+    console.log("exam id from prev:"+location.state.examId);
   },[]);
+
+  const saveApplication = (e) => {
+    e.preventDefault();
+    setApplicationData({name:"Santosh",age:30});
+    db.collection("myApplications").add(applicationData)
+  .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+      navigate('/review',{state:applicationData});
+
+  })
+  .catch((error) => {
+      console.error("Error adding document: ", error);
+  });
+  }
+
+
     return (
       <div className="col-lg-8 mx-auto p-4 py-md-5">
         <header className="d-flex align-items-center pb-3 mb-5 border-bottom">
@@ -42,7 +62,7 @@ function ApplicationPage() {
         </header>
 
         <main>
-          <h3>Complete the below application ...</h3>
+          <h3>Complete the below application ...{location.state.examName}</h3>
           <form>
             <div className="form-group">
               <label htmlFor="name">Name</label>
@@ -134,7 +154,7 @@ function ApplicationPage() {
             </div>
 
             <br/>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" onClick={(e) => {saveApplication(e)}}>
               Submit
             </button>
 
