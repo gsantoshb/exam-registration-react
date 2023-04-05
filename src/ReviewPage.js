@@ -1,11 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "./ReviewPage.css";
-import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "./firebase";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useStateValue } from "./StateProvider";
+import { db } from "./firebase";
 
 function ReviewPage() {
   
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+  },[]);
+
+  const saveApplication = (e) => {
+    e.preventDefault();
+    db.collection("myApplications").add(location.state)
+  .then((docRef) => {
+      console.log("Document written with ID: ", docRef.id);
+      navigate('/confirmation',{state:docRef.id});
+
+  })
+  .catch((error) => {
+      console.error("Error adding document: ", error);
+  });
+  }
+
 
     return (
       <div className="col-lg-8 mx-auto p-4 py-md-5">
@@ -37,64 +56,64 @@ function ReviewPage() {
         <main>
           <h3>Review the application below ...</h3>
           <form>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="Santosh G" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Name</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.name} />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Address Line 1</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="111 Princeton St" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Address Line 1</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.addr1}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Address Line 2</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="Apt 2" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Address Line 2</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.addr2}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">City</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="Princeton" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">City</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.city}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">State</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="NJ" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">State</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.state}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Zip</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="07965" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Zip</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.zip}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Phone</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="718-222-6658" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Phone</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.phone}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="san.g@gsbuniverse.com" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Email</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.email}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Center</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="LFHS" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Center</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.center}  />
                 </div>
             </div>
-            <div class="form-group row">
-              <label for="name" class="col-sm-2 col-form-label">Exam Date</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control-plaintext" id="staticName" value="15-AUG-2023" />
+            <div className="form-group row">
+              <label for="name" className="col-sm-2 col-form-label">Exam Date</label>
+                <div className="col-sm-10">
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.examDate} />
                 </div>
             </div>
 
@@ -102,7 +121,7 @@ function ReviewPage() {
 
             <br/>
 
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" onClick={(e) => {saveApplication(e)}}>
               Submit
             </button>
 

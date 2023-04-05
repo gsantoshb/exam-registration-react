@@ -12,25 +12,36 @@ function ApplicationPage() {
   const [{user}, dispatch] = useStateValue();
   const navigate = useNavigate();
   const location = useLocation();
-  const [applicationData, setApplicationData]= useState({});
+  const [name, setName] = useState();
+  const [addr1, setAddr1] = useState();
+  const [addr2, setAddr2] = useState();
+  const [city, setCity] = useState();
+  const [state, setState] = useState();
+  const [zip, setZip] = useState();
+  const [phone, setPhone] = useState();
+  const [email, setEmail] = useState();
+  const [center, setCenter] = useState();
+  const [examDate, setExamDate] = useState(new Date());
 
   useEffect(()=>{
     console.log("User from context in application page:"+user.uid);
     console.log("exam id from prev:"+location.state.examId);
   },[]);
 
-  const saveApplication = (e) => {
+  const gotoReviewPage = (e) => {
     e.preventDefault();
-    setApplicationData({name:"Santosh",age:30});
-    db.collection("myApplications").add(applicationData)
-  .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
-      navigate('/review',{state:applicationData});
+    const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,center:center, examDate:examDate};
+  //   db.collection("myApplications").add(data)
+  // .then((docRef) => {
+  //     console.log("Document written with ID: ", docRef.id);
+  //     navigate('/review',{state:data});
 
-  })
-  .catch((error) => {
-      console.error("Error adding document: ", error);
-  });
+  // })
+  // .catch((error) => {
+  //     console.error("Error adding document: ", error);
+  // });
+  navigate('/review',{state: data});
+
   }
 
 
@@ -72,6 +83,8 @@ function ApplicationPage() {
                 id="name"
                 aria-describedby="nameHelp"
                 placeholder="Enter name"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
               />
             </div>
             <div className="form-group">
@@ -81,6 +94,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="addr1"
                 placeholder="Enter Address Line 1"
+                onChange={(e) => setAddr1(e.target.value)}
+                value={addr1}
               />
             </div>
             <div className="form-group">
@@ -90,6 +105,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="addr2"
                 placeholder="Enter Address Line 2"
+                onChange={(e) => setAddr2(e.target.value)}
+                value={addr2}
               />
             </div>
             <div className="form-group">
@@ -99,6 +116,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="city"
                 placeholder="Enter City"
+                onChange={(e) => setCity(e.target.value)}
+                value={city}
               />
             </div>
             <div className="form-group">
@@ -108,6 +127,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="state"
                 placeholder="Enter State"
+                onChange={(e) => setState(e.target.value)}
+                value={state}
               />
             </div>
             <div className="form-group">
@@ -117,6 +138,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="zip"
                 placeholder="Enter Zipcode"
+                onChange={(e) => setZip(e.target.value)}
+                value={zip}
               />
             </div>
             <div className="form-group">
@@ -126,6 +149,8 @@ function ApplicationPage() {
                 className="form-control"
                 id="phoneNum"
                 placeholder="Enter Valid Phone number"
+                onChange={(e) => setPhone(e.target.value)}
+                value={phone}
               />
             </div>
             <div className="form-group">
@@ -135,12 +160,16 @@ function ApplicationPage() {
                 className="form-control"
                 id="email"
                 placeholder="Enter Valid Email Address"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </div>
 
             <div className="form-group">
               <label htmlFor="centerSelection">Select Center</label>
-              <select className="form-control" id="centerSelectionId">
+              <select className="form-select" id="centerSelectionId" onChange={(e) => setCenter(e.target.value)}
+                value={center}>
+                 <option>-- SELECT --</option>
                 <option>LFHS</option>
                 <option>All Saints</option>
                 <option>St Pauls</option>
@@ -150,11 +179,11 @@ function ApplicationPage() {
             </div>
             <div className="form-group">
               <label htmlFor="pickDate">Select Date</label>
-              <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} showTimeSelect dateFormat="Pp" />
+              <DatePicker selected={examDate} onChange={(date) => setExamDate(date)} showTimeSelect dateFormat="Pp" />
             </div>
 
             <br/>
-            <button type="submit" className="btn btn-primary" onClick={(e) => {saveApplication(e)}}>
+            <button type="submit" className="btn btn-primary" onClick={(e) => {gotoReviewPage(e)}}>
               Submit
             </button>
 
