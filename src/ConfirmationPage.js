@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ConfirmationPage.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { auth, googleProvider } from "./firebase";
 import { useStateValue } from "./StateProvider";
 
@@ -25,7 +25,9 @@ function ConfirmationPage() {
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Thank you for submitting!!</h1>
         <p class="col-md-8 fs-4">Thank you for submitting your application. We wish you the best of luck!!!</p>
-        <button class="btn btn-primary btn-lg" type="button">Go to your Dashboard</button>
+        <Link to="/dashboard">
+          <button class="btn btn-primary btn-lg" type="button">Go to your Dashboard</button>
+          </Link>
       </div>
     </div>
 

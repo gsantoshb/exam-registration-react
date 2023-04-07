@@ -30,7 +30,8 @@ function ApplicationPage() {
 
   const gotoReviewPage = (e) => {
     e.preventDefault();
-    const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,center:center, examDate:examDate};
+    const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,
+                center:center, examDate:examDate, examId: location.state.examId, userId: user.uid };
   //   db.collection("myApplications").add(data)
   // .then((docRef) => {
   //     console.log("Document written with ID: ", docRef.id);

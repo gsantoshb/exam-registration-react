@@ -13,25 +13,31 @@ function DashboardPage() {
   useEffect(()=>{
     console.log("User from context in dashboard page:"+user.uid);
     const examsData = [];
+    const myApplicationsData = [];
+
     db.collection("exams").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
           examsData.push({id: doc.id, name: doc.data().name, isOpen: doc.data().isOpen});
       });
+
       setAvailableExams(examsData);
+
   });
 
-  const myApplicationsData = [];
+
   db.collection("myApplications").where("userId", "==", user.uid)
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            myApplicationsData.push({id: doc.id, applicationNumber: doc.data().applicationNumber, name: doc.data().name, status: doc.data().status});
-        });
-        setMyApplications(myApplicationsData);
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          myApplicationsData.push({id: doc.id, applicationNumber: doc.data().applicationNumber, examName: doc.data().examId, status: doc.data().status});
+      });
+      setMyApplications(myApplicationsData);
+  })
+  .catch((error) => {
+      console.log("Error getting documents: ", error);
+  });
+
+
   },[]);
 
 
@@ -51,7 +57,6 @@ function DashboardPage() {
       
         <main>
           <h3>My Applications</h3>
-          <p className="fs-5 col-md-8">Check the status of your current applications</p>
       
           <table className="table table-striped">
           <thead>
@@ -59,16 +64,14 @@ function DashboardPage() {
             <th scope="col">#</th>
             <th scope="col">Application Number</th>
             <th scope="col">Exam</th>
-            <th scope="col">Status</th>
           </tr>
           </thead>
           <tbody>
           {myApplications.map(application => (
             <tr key={application.id}>
               <th scope="row">{application.id}</th>
-              <td>{application.applicationNumber}</td>
-              <td>{application.name}</td>
-              <td>{application.status === "Submitted"?<button type="button" className="btn btn-success">Completed - Click to get HT</button>:<button  type="button" className="btn btn-secondary">Continue application</button>}</td>
+              <td>{application.id}</td>
+              <td>{application.examName}</td>
             </tr>
           ))}
           </tbody>
