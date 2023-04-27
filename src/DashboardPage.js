@@ -16,8 +16,10 @@ function DashboardPage() {
     const myApplicationsData = [];
 
     db.collection("exams").get().then((querySnapshot) => {
+      let key=1;
       querySnapshot.forEach((doc) => {
-          examsData.push({id: doc.id, name: doc.data().name, isOpen: doc.data().isOpen});
+          examsData.push({id: key,examId:doc.id, name: doc.data().name, isOpen: doc.data().isOpen});
+          key++;
       });
 
       setAvailableExams(examsData);
@@ -28,9 +30,11 @@ function DashboardPage() {
   db.collection("myApplications").where("userId", "==", user.uid)
   .get()
   .then((querySnapshot) => {
+    let key=1;
       querySnapshot.forEach((doc) => {
-          myApplicationsData.push({id: doc.id, applicationNumber: doc.data().applicationNumber, examName: doc.data().examId, status: doc.data().status});
-      });
+          myApplicationsData.push({id: key, applicationNumber: doc.id, examId: doc.data().examId});
+          key++;
+        });
       setMyApplications(myApplicationsData);
   })
   .catch((error) => {
@@ -39,6 +43,14 @@ function DashboardPage() {
 
 
   },[]);
+
+  const getExamName = (examId, availableExams) =>{
+          for(let i=0;i<availableExams.length;i++){
+            if(examId === availableExams[i].examId){
+              return availableExams[i].name;
+            }
+          }
+  }
 
 
   const gotoExam = (examId, examName) => {
@@ -56,7 +68,7 @@ function DashboardPage() {
         </header>
       
         <main>
-          <h3>My Applications</h3>
+          <h3>My Submitted Applications</h3>
       
           <table className="table table-striped">
           <thead>
@@ -64,14 +76,15 @@ function DashboardPage() {
             <th scope="col">#</th>
             <th scope="col">Application Number</th>
             <th scope="col">Exam</th>
+
           </tr>
           </thead>
           <tbody>
           {myApplications.map(application => (
             <tr key={application.id}>
               <th scope="row">{application.id}</th>
-              <td>{application.id}</td>
-              <td>{application.examName}</td>
+              <td>{application.applicationNumber}</td>
+              <td>{getExamName(application.examId,availableExams)}</td>
             </tr>
           ))}
           </tbody>
@@ -96,7 +109,7 @@ function DashboardPage() {
             <tr key={exam.id}>
               <th scope="row">{exam.id}</th>
               <td>{exam.name}</td>
-              <td>{exam.isOpen?<button type="button" className="btn btn-success"   onClick={() => {gotoExam(exam.id, exam.name)}} >Go to exam reg</button>:<button disabled type="button" className="btn btn-secondary">Go to exam reg</button>}</td>
+              <td>{exam.isOpen?<button type="button" className="btn btn-success"   onClick={() => {gotoExam(exam.examId, exam.name)}} >Go to exam reg</button>:<button disabled type="button" className="btn btn-secondary">Go to exam reg</button>}</td>
             </tr>
           ))}
 

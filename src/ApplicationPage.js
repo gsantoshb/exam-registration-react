@@ -22,27 +22,79 @@ function ApplicationPage() {
   const [email, setEmail] = useState();
   const [center, setCenter] = useState();
   const [examDate, setExamDate] = useState(new Date());
+  const [errors, setErrors] = useState('');
+  const [hideErrors, setHideErrors] = useState(true);
+  const [validated, setValidated] = useState(false);
+
 
   useEffect(()=>{
     console.log("User from context in application page:"+user.uid);
     console.log("exam id from prev:"+location.state.examId);
+    db.collection("myApplications").doc(location.state.applicationId)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            setName(doc.data().name);
+        });
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+
   },[]);
+
+  useEffect(() =>{
+
+      setErrors('');
+      setHideErrors(true);
+  
+    //Check form
+    if(!name){
+      setErrors(errors+'\nName is null');
+      setHideErrors(false);
+    }
+     if(!addr1){
+      setErrors(errors+'\nAddr1 is null');
+      setHideErrors(false);
+    }
+    
+    if(!city){
+      setErrors(errors+'\nCity is null');
+      setHideErrors(false);
+    }
+     if(!state){
+      setErrors(errors+'\nState is null');
+      setHideErrors(false);
+    }
+     if(!zip){
+      setErrors(errors+'\nZip is null');
+      setHideErrors(false);
+    }
+     if(!phone){
+      setErrors(errors+'\nPhone is null');
+      setHideErrors(false);
+    }
+     if(!email){
+      setErrors(errors+'\nEmail is null');
+      setHideErrors(false);
+    }
+     if(!center){
+      setErrors(errors+'\nCenter is null');
+      setHideErrors(false);
+    }
+
+  },[hideErrors]);
 
   const gotoReviewPage = (e) => {
     e.preventDefault();
+    setErrors('');
+    setHideErrors(true);
+
     const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,
                 center:center, examDate:examDate, examId: location.state.examId, userId: user.uid };
-  //   db.collection("myApplications").add(data)
-  // .then((docRef) => {
-  //     console.log("Document written with ID: ", docRef.id);
-  //     navigate('/review',{state:data});
-
-  // })
-  // .catch((error) => {
-  //     console.error("Error adding document: ", error);
-  // });
-  navigate('/review',{state: data});
-
+  if(hideErrors === true){
+    navigate('/review',{state: data});
+  }
   }
 
 
@@ -182,7 +234,12 @@ function ApplicationPage() {
               <label htmlFor="pickDate">Select Date</label>
               <DatePicker selected={examDate} onChange={(date) => setExamDate(date)} showTimeSelect dateFormat="Pp" />
             </div>
-
+            <br />
+            <div class="alert alert-danger" hidden={hideErrors} role="alert">
+              Your form has errors. Please fix below:
+              {errors}
+            </div>
+           
             <br/>
             <button type="submit" className="btn btn-primary" onClick={(e) => {gotoReviewPage(e)}}>
               Submit
@@ -195,6 +252,8 @@ function ApplicationPage() {
         </footer>
       </div>
     );
+
+
 
 }
 
