@@ -13,13 +13,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 
-  // apiKey: "AIzaSyBJRpxx-CF8ljURj8Lxi__g2NfQH8WBtBo",
-  // authDomain: "exam-registration-react.firebaseapp.com",
-  // databaseURL: "https://exam-registration-react-default-rtdb.firebaseio.com",
-  // projectId: "exam-registration-react",
-  // storageBucket: "exam-registration-react.appspot.com",
-  // messagingSenderId: "883813278105",
-  // appId: "1:883813278105:web:91d41b50b1e754e2747308"
 };
 
 
