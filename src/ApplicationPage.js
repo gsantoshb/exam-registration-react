@@ -3,12 +3,12 @@ import "./ApplicationPage.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { db, auth, googleProvider } from "./firebase";
+import { db} from "./firebase";
 import { useStateValue } from "./StateProvider";
+import { useForm } from "react-hook-form";
 
 function ApplicationPage() {
 
-  const [startDate, setStartDate] = useState(new Date());
   const [{user}, dispatch] = useStateValue();
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,9 +22,7 @@ function ApplicationPage() {
   const [email, setEmail] = useState();
   const [center, setCenter] = useState();
   const [examDate, setExamDate] = useState(new Date());
-  const [errors, setErrors] = useState('');
-  const [hideErrors, setHideErrors] = useState(true);
-  const [validated, setValidated] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
 
   useEffect(()=>{
@@ -43,56 +41,16 @@ function ApplicationPage() {
 
   },[]);
 
-  useEffect(() =>{
 
-      setErrors('');
-      setHideErrors(true);
-  
-    //Check form
-    if(!name){
-      setErrors(errors+'\nName is null');
-      setHideErrors(false);
-    }
-     if(!addr1){
-      setErrors(errors+'\nAddr1 is null');
-      setHideErrors(false);
-    }
-    
-    if(!city){
-      setErrors(errors+'\nCity is null');
-      setHideErrors(false);
-    }
-     if(!state){
-      setErrors(errors+'\nState is null');
-      setHideErrors(false);
-    }
-     if(!zip){
-      setErrors(errors+'\nZip is null');
-      setHideErrors(false);
-    }
-     if(!phone){
-      setErrors(errors+'\nPhone is null');
-      setHideErrors(false);
-    }
-     if(!email){
-      setErrors(errors+'\nEmail is null');
-      setHideErrors(false);
-    }
-     if(!center){
-      setErrors(errors+'\nCenter is null');
-      setHideErrors(false);
-    }
-
-  },[hideErrors]);
-
-  const gotoReviewPage = (e) => {
-    e.preventDefault();
-    setErrors('');
-    setHideErrors(true);
-
-    const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,
-                center:center, examDate:examDate, examId: location.state.examId, userId: user.uid };
-  if(hideErrors === true){
+  const onSubmit = (data) => {
+      
+    // const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,
+    //             center:center, examDate:examDate, examId: location.state.examId, userId: user.uid };
+    console.log(data);
+    data["examDate"]=examDate;
+    data["userId"]=user.uid;
+    data["examId"]=location.state.examId;
+  if(errors.name === undefined){
     navigate('/review',{state: data});
   }
   }
@@ -127,7 +85,7 @@ function ApplicationPage() {
 
         <main>
           <h3>Complete the below application ...{location.state.examName}</h3>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
@@ -136,9 +94,10 @@ function ApplicationPage() {
                 id="name"
                 aria-describedby="nameHelp"
                 placeholder="Enter name"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+                {...register("name", { required: true })}
               />
+              {errors.name && <p style={{color:'red'}} >This field is required</p>}
+
             </div>
             <div className="form-group">
               <label htmlFor="Address1">Address Line1</label>
@@ -147,9 +106,10 @@ function ApplicationPage() {
                 className="form-control"
                 id="addr1"
                 placeholder="Enter Address Line 1"
-                onChange={(e) => setAddr1(e.target.value)}
-                value={addr1}
+                {...register("addr1", { required: true })}
               />
+              {errors.addr1 && <p style={{color:'red'}} >This field is required</p>}
+
             </div>
             <div className="form-group">
               <label htmlFor="Address2">Address Line2</label>
@@ -158,8 +118,7 @@ function ApplicationPage() {
                 className="form-control"
                 id="addr2"
                 placeholder="Enter Address Line 2"
-                onChange={(e) => setAddr2(e.target.value)}
-                value={addr2}
+                {...register("addr2")}
               />
             </div>
             <div className="form-group">
@@ -169,9 +128,9 @@ function ApplicationPage() {
                 className="form-control"
                 id="city"
                 placeholder="Enter City"
-                onChange={(e) => setCity(e.target.value)}
-                value={city}
+                {...register("city", { required: true })}
               />
+              {errors.city && <p style={{color:'red'}} >This field is required</p>}
             </div>
             <div className="form-group">
               <label htmlFor="state">State</label>
@@ -180,9 +139,9 @@ function ApplicationPage() {
                 className="form-control"
                 id="state"
                 placeholder="Enter State"
-                onChange={(e) => setState(e.target.value)}
-                value={state}
+                {...register("state", { required: true })}
               />
+              {errors.state && <p style={{color:'red'}} >This field is required</p>}
             </div>
             <div className="form-group">
               <label htmlFor="zip">Zip</label>
@@ -191,9 +150,9 @@ function ApplicationPage() {
                 className="form-control"
                 id="zip"
                 placeholder="Enter Zipcode"
-                onChange={(e) => setZip(e.target.value)}
-                value={zip}
+                {...register("zip", { required: true })}
               />
+              {errors.zip && <p style={{color:'red'}} >This field is required</p>}
             </div>
             <div className="form-group">
               <label htmlFor="phoneNum">Phone</label>
@@ -202,9 +161,9 @@ function ApplicationPage() {
                 className="form-control"
                 id="phoneNum"
                 placeholder="Enter Valid Phone number"
-                onChange={(e) => setPhone(e.target.value)}
-                value={phone}
+                {...register("phoneNum", { required: true })}
               />
+              {errors.phoneNum && <p style={{color:'red'}} >This field is required</p>}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -213,35 +172,32 @@ function ApplicationPage() {
                 className="form-control"
                 id="email"
                 placeholder="Enter Valid Email Address"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                {...register("email", { required: true })}
               />
+              {errors.email && <p style={{color:'red'}} >This field is required</p>}
             </div>
 
             <div className="form-group">
               <label htmlFor="centerSelection">Select Center</label>
-              <select className="form-select" id="centerSelectionId" onChange={(e) => setCenter(e.target.value)}
-                value={center}>
-                 <option>-- SELECT --</option>
+              <select className="form-select" id="centerSelectionId"     {...register("center", { required: true })}>
                 <option>LFHS</option>
                 <option>All Saints</option>
                 <option>St Pauls</option>
                 <option>Grammar</option>
                 <option>St Josephs</option>
               </select>
+              {errors.center && <p style={{color:'red'}} >This field is required</p>}
+
             </div>
             <div className="form-group">
               <label htmlFor="pickDate">Select Date</label>
               <DatePicker selected={examDate} onChange={(date) => setExamDate(date)} showTimeSelect dateFormat="Pp" />
             </div>
             <br />
-            <div class="alert alert-danger" hidden={hideErrors} role="alert">
-              Your form has errors. Please fix below:
-              {errors}
-            </div>
+
            
             <br/>
-            <button type="submit" className="btn btn-primary" onClick={(e) => {gotoReviewPage(e)}}>
+            <button type="submit" className="btn btn-primary">
               Submit
             </button>
 

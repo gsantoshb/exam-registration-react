@@ -95,7 +95,7 @@ function ReviewPage() {
             <div className="form-group row">
               <label for="name" className="col-sm-2 col-form-label">Phone</label>
                 <div className="col-sm-10">
-                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.phone}  />
+                  <input type="text" readonly className="form-control-plaintext" id="staticName" value={location.state.phoneNum}  />
                 </div>
             </div>
             <div className="form-group row">
