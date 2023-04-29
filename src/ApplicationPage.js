@@ -3,58 +3,26 @@ import "./ApplicationPage.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { db} from "./firebase";
 import { useStateValue } from "./StateProvider";
 import { useForm } from "react-hook-form";
 
 function ApplicationPage() {
 
-  const [{user}, dispatch] = useStateValue();
+  const [{user}] = useStateValue();
   const navigate = useNavigate();
   const location = useLocation();
-  const [name, setName] = useState();
-  const [addr1, setAddr1] = useState();
-  const [addr2, setAddr2] = useState();
-  const [city, setCity] = useState();
-  const [state, setState] = useState();
-  const [zip, setZip] = useState();
-  const [phone, setPhone] = useState();
-  const [email, setEmail] = useState();
-  const [center, setCenter] = useState();
   const [examDate, setExamDate] = useState(new Date());
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-
-  useEffect(()=>{
-    console.log("User from context in application page:"+user.uid);
-    console.log("exam id from prev:"+location.state.examId);
-    db.collection("myApplications").doc(location.state.applicationId)
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            setName(doc.data().name);
-        });
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
-
-  },[]);
-
-
   const onSubmit = (data) => {
-      
-    // const data ={name:name,addr1:addr1,addr2:addr2,city:city,state:state,zip:zip,phone:phone,email:email,
-    //             center:center, examDate:examDate, examId: location.state.examId, userId: user.uid };
     console.log(data);
     data["examDate"]=examDate;
     data["userId"]=user.uid;
     data["examId"]=location.state.examId;
-  if(errors.name === undefined){
-    navigate('/review',{state: data});
+      if(errors.name === undefined){
+        navigate('/review',{state: data});
+      }
   }
-  }
-
 
     return (
       <div className="col-lg-8 mx-auto p-4 py-md-5">

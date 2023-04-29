@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./ConfirmationPage.css";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { auth, googleProvider } from "./firebase";
-import { useStateValue } from "./StateProvider";
+import { Link } from "react-router-dom";
 
 function ConfirmationPage() {
-
-  const location = useLocation();
-
 
     return (
       <div className="col-lg-8 mx-auto p-4 py-md-5">

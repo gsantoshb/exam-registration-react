@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./ReviewPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useStateValue } from "./StateProvider";
 import { db } from "./firebase";
 
 function ReviewPage() {
@@ -9,8 +8,6 @@ function ReviewPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(()=>{
-  },[]);
 
   const saveApplication = (e) => {
     e.preventDefault();
@@ -18,7 +15,6 @@ function ReviewPage() {
   .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
       navigate('/confirmation',{state:docRef.id});
-
   })
   .catch((error) => {
       console.error("Error adding document: ", error);
